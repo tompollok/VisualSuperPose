@@ -1,0 +1,7 @@
+%YAML:1.0
+---
+train_directory: "/data/datasets/Madrid_Metropolis/images/"
+query_image: "/data/datasets/Madrid_Metropolis/query.jpg"
+vocab_file: "/data/datasets/Roman_Forum/voc_sift_roman_forum.fbow"
+sg_output: "/data/datasets/Madrid_Metropolis/superglue_output"
+max_images: 100

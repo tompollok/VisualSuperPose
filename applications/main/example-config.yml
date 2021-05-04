@@ -1,0 +1,148 @@
+%YAML:1.0
+---
+# 1: Use images from database for retrieval
+#     Requires valid database_path
+# 0: Only load on the fly
+use_database: 1
+
+# Path to database file. Is created if it does not exist
+database_path: '/data/datasets/Madrid_Metropolis/ppbaf.sql'
+
+# 1: Path to images in gallery_directory
+#    Path to reconstruction in reconstruction_directory
+# 0: Recursive search. gallery_directory must contain the colmap subdirectories (doesn't matter how many)
+#          then the structure has to be as follows (with Alamo as example):
+#              gallery_directory/Alamo/images/*.jpg
+#              gallery_directory/Alamo/model/*.txt
+use_single_dir: 1
+
+# 1: database is filled with images
+#   If use_single_dir --> only that one directory is added to db. It will check whether the image path is
+#   already in the Database. If it is, the path will not be added. Those checks don't exist for the calculation
+#   of the SIFT features and Fbow maps! Those will be newly calculacted each time. So make sure that they are
+#   not calculated unnecessarily.
+fill_database: 1
+
+# Directory for creating fbow vocabulary (Recursively searched)
+train_directory: '/data/datasets/Madrid_Metropolis/images/'
+
+# Directory for image retrieval / importing to db
+gallery_directory: '/data/datasets/Madrid_Metropolis/images/'
+
+# Directory containing a colmap reconstruction
+reconstruction_directory: '/data/datasets/Madrid_Metropolis/sparse/'
+
+# Query Image for Nearest-Neighbour Search and Pose estimation
+query_image: "/data/datasets/Madrid_Metropolis/images/9557374_3df83591fa_o.jpg"
+
+#alternative to single query_image:
+#use the following 2 parameters instead of query_image if you want to process multiple query images at once
+# Path to textfile containing a list of query images
+# Gets used instead of query_image if uncommented
+query_image_list: "/path/to/listofqueryimages.txt"
+# Prefix to add to files in query_image_list
+query_image_list_prefix: "path/where/queryimages/are/stored"
+
+# Filepath to FBoW vocabulary file. Will be created if it does not exist
+vocab_file: "/path/to/vocabulary.fbow"
+
+# Output directory for retrieved images
+result_dir: '/path/to/resultsdir'
+
+# 1: Filter images used for vocabulary creation
+#    Needs valid train_clean_csv filepath
+# 0: Do not filter
+filter_images: 0
+
+# Filepath to a csv file for filtering images; for Google Landmarks Dataset V2
+#download this file from here: https://github.com/cvdfoundation/google-landmark
+train_clean_csv: '/path/to/csv'
+
+# Number of images to retrieve
+retrieve_images_num: 15
+
+# Uncomment to limit the number of gallery images that are loaded
+# Only effective without db usage
+#max_num_gallery_images: 100
+
+# Threads to be used during FBoW score calculation
+num_threads: 4
+
+# 1: Display retrieved images
+display_images: 1
+
+# Filename to write matching pairs into for superglue script execution
+#write_match_pairs_file: 'pairs.txt'
+
+# 1: Use SuperPoint + SuperGlue Matching
+# 0: Classic SIFT Matching
+# Default: 0
+use_superglue: 1
+
+# Path to SuperPoint torch model
+# Defaults to SuperPoint.zip, uncomment to change
+#superpoint_model: "SuperPoint.zip"
+
+# Path to SuperGlue torch model
+# Defaults to SuperGlue.zip, uncomment to change
+#superglue_model: "SuperGlue.zip"
+
+# Resize images before superpoint extraction
+superpoint_resize_width: 640
+
+# 1: Print evaluation information
+# 0: Don't print evaluation information
+#evaluate anything at all
+evaluation: 1
+
+#whether to evaluate retrieval on Google Landmarks dataset.
+#1: do evaluation; needs train_clean_csv path
+#0: don't do evaluation
+evaluate_google_retrieval: 0
+
+#1: execute registration part of pipeline
+#0: don't execute registration part of pipeline
+do_registration: 1
+
+#whether to use superglue for registration (only available on superglue branch, not on master!)
+#1: use superglue
+#0: use classical registration
+use_superglue: 0
+
+# 1: Evaluate both SuperGlue and Classic registration in one session
+# 0: Use SuperGlue only if use_superglue is set, or classic registration otherwise
+evaluate_both_registrations: 0
+
+#if use_superglue: these parameters need to be set
+#see https://github.com/valgur/SuperGluePretrainedNetwork on how to create these with python
+superpoint_model: "path/to/SuperPoint.zip"
+superglue_model: "path/to/SuperGlue.zip"
+
+#rescale size of image for superglue matching; depends on your GPU memory size (if GPU version of libtorch is used)
+superpoint_resize_width: 500
+
+#1: use CNN retrieval instead of fbow retrieval --> retrieval_net_path needs to be set
+#0: use fbow retrieval
+use_cnn_retrieval: 0
+
+#must be set if cnn retrieval is to be used; path to *.onnx file
+retrieval_net_path: "/path/to/model.onnx"
+
+#number of images to be processed by the CNN during retrieval at once. Depends on you GPU/RAM memory size
+retrieval_net_batch: 200
+
+#0: use just one CNN model for retrieval (retrieval_net_path)
+#1: execute retrieval for all models that are in evaluate_cnn_dir  --> that must be set
+use_multiple_models: 0
+
+#if you want to execute retrieval with multiple CNN models at once (for evaluation), this path must be set to
+#the directory where all the desired models are
+evaluate_cnn_dir: "/path/to/cnn-models/dir"
+
+#path to directory to save csv files from with evaluation results to
+#only needed if evaluation is turned on
+save_csv_evaluation_dir: "/path/to/dir/"
+
+#prefix indicating which model was used
+#example: small: model trained on small dataset
+model_prefix: "small"
